@@ -1,0 +1,10 @@
+.gameBackground{
+    background-image: url('../../assets/images/background.png');
+    background-position: center; /* Center the image */
+    background-repeat: repeat-y; /* Do not repeat the image */
+    background-size: cover; /* Resize the background image to cover the entire container */
+}
+
+.fullScreen{
+    min-height: 100vh;
+}

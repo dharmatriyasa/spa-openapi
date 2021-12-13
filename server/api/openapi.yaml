@@ -1,0 +1,740 @@
+openapi: 3.0.0
+info:
+  title: Challenges CH08
+  description: "This API is being used to manage the blog of **Insert Company Here**.\
+    \ By using this API, you can create an entry for blog, edit you blog post,\nfind\
+    \ you blogpost, or even delete it. To start using this API, you must create an\
+    \ account for **Insert Company Here**.\n"
+  version: 2.0.0
+servers:
+- url: /
+  description: Mock Server
+security:
+- BearerToken: []
+tags:
+  - name: Admin
+    description: "contains admin utilities"
+  - name: User
+    description: "contains user utilities"
+  - name: Game
+    description: "contains all about game"
+  - name: Room
+    description: "contains all about room"
+  - name: Round
+    description: "contains all about round"
+  - name: Biodata
+    description: "contains all about biodata"
+  - name: Stats
+    description: "contains all about stas"
+  - name: Level
+    description: "contains all about level"
+paths:
+  # for Admin
+  /v1/users:
+    get:
+      tags:
+      - User
+      summary: Root
+      description: This endpoint will return all users data
+      operationId: getUsers
+      responses:
+        "200":
+          description: List of users is retreived
+          content: 
+            application/json: 
+              schema:
+                type: object
+                properties:
+                  status: 
+                    type: string
+                    example: "OK"
+                  data:
+                    type: array
+                    items:
+                      type: object
+                      properties: 
+                        id:
+                          type: number
+                          example: 1
+                        username:
+                          type: string
+                          example: "dharmatriyasa"
+                        roleId:
+                          type: number
+                          example: 1
+                        avatarUrl:
+                          type: string
+                          example: "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b6/Image_created_with_a_mobile_phone.png/1200px-Image_created_with_a_mobile_phone.png"
+                        bio:
+                          type: string
+                          example: "Hy my name is dharma. I'm progammer!"
+                        phoneNumber:
+                          type: string
+                          example: "081234567890"
+                        address:
+                          type: string
+                          example: "Jl. P. Salawati"
+        "401":
+          description: Cannot get lists of users without authorized access
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: "FAIL"
+                  data:
+                    type: object
+                    properties:
+                      name:
+                        type: string
+                        example: "UNAUTHORIZED"
+                      message:
+                        type: string
+                        example: You aren't admin!                  
+  /v1/games:
+    get:
+      tags:
+      - Game
+      summary: Root
+      description: This endpoint will return all games data
+      operationId: getGames
+      responses:
+        "200":
+          description: List of games is retreived
+          content: 
+            application/json: 
+              schema:
+                type: object
+                properties:
+                  status: 
+                    type: string
+                    example: "OK"
+                  data:
+                    type: array
+                    items:
+                      type: object
+                      properties: 
+                        id:
+                          type: number
+                          example: 1
+                        firstTimePlay:
+                          type: string
+                          example: "2021-07-30 17:00:00 +0700"
+                        gameTimeEnd:
+                          type: string
+                          example: "2021-07-30 17:00:00 +0730"
+                        isGameEnd:
+                          type: boolean
+                          example: true
+                        winnerId:
+                          type: number
+                          example: 2
+                        totalRound:
+                          type: number
+                          example: 3
+        "401":
+          description: Cannot get lists of users without authorized access
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: "FAIL"
+                  data:
+                    type: object
+                    properties:
+                      name:
+                        type: string
+                        example: "UNAUTHORIZED"
+                      message:
+                        type: string
+                        example: You aren't admin!
+  # /v1/rooms
+  # /v1/rounds
+
+
+  # /:
+  #   get:
+  #     tags:
+  #     - Misc
+  #     summary: Root
+  #     description: |
+  #       # Root
+
+  #       Use this endpoint to check the health or ping this API.
+  #       It will return basic JSON object.
+  #     operationId: getRoot
+  #     responses:
+  #       "200":
+  #         description: Root response body schema
+  #         content:
+  #           application/json:
+  #             schema:
+  #               $ref: '#/components/schemas/inline_response_200'
+  #     security: []
+  #     x-swagger-router-controller: Misc
+  # /v1/login:
+  #   post:
+  #     tags:
+  #     - Authentication
+  #     summary: Retrieve token
+  #     description: "# Retrieve access token\n\nUse this endpoint to retrieve the access\
+  #       \ token\nwith the correct credential. If you haven't got\nany account yet,\
+  #       \ please register via Register endpoint.\n"
+  #     operationId: doLogin
+  #     requestBody:
+  #       $ref: '#/components/requestBodies/CredentialRequest'
+  #     responses:
+  #       "201":
+  #         description: Login and register body schema
+  #         content:
+  #           application/json:
+  #             schema:
+  #               $ref: '#/components/schemas/inline_response_201'
+  #       "401":
+  #         description: Bad credential response body schema
+  #         content:
+  #           application/json:
+  #             schema:
+  #               $ref: '#/components/schemas/inline_response_401'
+  #     security: []
+  #     x-swagger-router-controller: Authentication
+  # /v1/register:
+  #   post:
+  #     tags:
+  #     - Authentication
+  #     summary: Create new account
+  #     description: |
+  #       # Create new account
+
+  #       Use this endpoint to create new account for this site.
+  #       If the email already exist it will return `422`.
+  #     operationId: doRegister
+  #     requestBody:
+  #       $ref: '#/components/requestBodies/RegistrationRequest'
+  #     responses:
+  #       "201":
+  #         description: Login and register body schema
+  #         content:
+  #           application/json:
+  #             schema:
+  #               $ref: '#/components/schemas/inline_response_201'
+  #       "422":
+  #         description: Failed to register response body schema
+  #         content:
+  #           application/json:
+  #             schema:
+  #               $ref: '#/components/schemas/inline_response_422'
+  #     security: []
+  #     x-swagger-router-controller: Authentication
+  # /v1/posts:
+  #   get:
+  #     tags:
+  #     - Post
+  #     summary: Get Posts
+  #     description: "# Get Posts\n\nUse this endpoint to retrieve all posts\nthat are\
+  #       \ available on the database. No pagination required.\n\nWhen you send `status`\
+  #       \ in the query parameter and the value\nis `DRAFT`, it will only send you\
+  #       \ an error when the `author_id`\nis not you.\n"
+  #     operationId: getPosts
+  #     parameters:
+  #     - name: author_id
+  #       in: query
+  #       required: false
+  #       style: form
+  #       explode: true
+  #       schema:
+  #         type: integer
+  #     - name: status
+  #       in: query
+  #       required: false
+  #       style: form
+  #       explode: true
+  #       schema:
+  #         type: string
+  #         enum:
+  #         - DRAFT
+  #         - PUBLISHED
+  #     responses:
+  #       "200":
+  #         description: Get posts body schema
+  #         content:
+  #           application/json:
+  #             schema:
+  #               $ref: '#/components/schemas/inline_response_200_1'
+  #       "403":
+  #         description: "When you try to access, modify, or delete someone else's resources"
+  #         content:
+  #           application/json:
+  #             schema:
+  #               $ref: '#/components/schemas/inline_response_403'
+  #     security: []
+  #     x-swagger-router-controller: Post
+  #   post:
+  #     tags:
+  #     - Post
+  #     summary: Create Post
+  #     description: "# Create Post\n\nYou can create a post to our website, by hitting\
+  #       \ this endpoint.\nBy default, your post won't be shown to the public yet,\
+  #       \ the status\nof that post will be draft by default.\n\nYou can publish your\
+  #       \ post on another endpoint.\n"
+  #     operationId: createPost
+  #     requestBody:
+  #       $ref: '#/components/requestBodies/CreatePostRequest'
+  #     responses:
+  #       "201":
+  #         description: "Create, update, and get post body schema"
+  #         content:
+  #           application/json:
+  #             schema:
+  #               $ref: '#/components/schemas/inline_response_201_1'
+  #     x-swagger-router-controller: Post
+  # /v1/posts/:id:
+  #   get:
+  #     tags:
+  #     - Post
+  #     summary: Get Post
+  #     description: "# Get Post\n\nYou can get a specific post by giving this endpoint\n\
+  #       the ID of the post in the path.\n\nWhen the post is not found, it will return\
+  #       \ `404`.\n"
+  #     operationId: getPost
+  #     responses:
+  #       "200":
+  #         description: "Create, update, and get post body schema"
+  #         content:
+  #           application/json:
+  #             schema:
+  #               $ref: '#/components/schemas/inline_response_201_1'
+  #     security: []
+  #     x-swagger-router-controller: Post
+  #   put:
+  #     tags:
+  #     - Post
+  #     summary: Update Post
+  #     description: |
+  #       # Update Post
+
+  #       You can update your post if you feel like
+  #       there's something need to be updated.
+  #     operationId: updatePost
+  #     requestBody:
+  #       $ref: '#/components/requestBodies/UpdatePostRequest'
+  #     responses:
+  #       "200":
+  #         description: "Create, update, and get post body schema"
+  #         content:
+  #           application/json:
+  #             schema:
+  #               $ref: '#/components/schemas/inline_response_201_1'
+  #       "403":
+  #         description: "When you try to access, modify, or delete someone else's resources"
+  #         content:
+  #           application/json:
+  #             schema:
+  #               $ref: '#/components/schemas/inline_response_403'
+  #     x-swagger-router-controller: Post
+  #   delete:
+  #     tags:
+  #     - Post
+  #     summary: Delete Post
+  #     description: "# Delete Post\n\nYou can remove your post, but why?\n"
+  #     operationId: deletePost
+  #     responses:
+  #       "204":
+  #         description: Root response body schema
+  #         content:
+  #           application/json:
+  #             schema:
+  #               $ref: '#/components/schemas/inline_response_200'
+  #       "403":
+  #         description: "When you try to access, modify, or delete someone else's resources"
+  #         content:
+  #           application/json:
+  #             schema:
+  #               $ref: '#/components/schemas/inline_response_403'
+  #     x-swagger-router-controller: Post
+  # /v1/posts/:id/publishment:
+  #   put:
+  #     tags:
+  #     - Post
+  #     summary: Publish Post
+  #     description: |
+  #       # Publish Post
+
+  #       Now you can decide to show the post to the public or not
+  #       by setting the publishment state.
+  #     operationId: publishPost
+  #     requestBody:
+  #       $ref: '#/components/requestBodies/PublishPostRequest'
+  #     responses:
+  #       "200":
+  #         description: "Create, update, and get post body schema"
+  #         content:
+  #           application/json:
+  #             schema:
+  #               $ref: '#/components/schemas/inline_response_201_1'
+  #       "403":
+  #         description: "When you try to access, modify, or delete someone else's resources"
+  #         content:
+  #           application/json:
+  #             schema:
+  #               $ref: '#/components/schemas/inline_response_403'
+  #     x-swagger-router-controller: Post
+# components:
+#   schemas:
+#     PostEntity:
+#       type: object
+#       properties:
+#         id:
+#           type: number
+#           example: 1
+#         title:
+#           type: string
+#           example: Industrial Society and Its Future
+#         body:
+#           type: string
+#           example: <p>Industrial society and its future</p>
+#         status:
+#           type: string
+#           enum:
+#           - DRAFT
+#           - PUBLISHED
+#         author:
+#           $ref: '#/components/schemas/UserEntity'
+#         created_at:
+#           type: string
+#           example: 30-07-2021 12:00 +07:00
+#         published_at:
+#           type: string
+#           example: 30-07-2021 12:00 +07:00
+#         updated_at:
+#           type: string
+#           example: 30-07-2021 12:00 +07:00
+#       example:
+#         updated_at: 30-07-2021 12:00 +07:00
+#         author:
+#           updated_at: 30-07-2021 12:00 +07:00
+#           name: Fikri Rahmat Nurhidayat
+#           created_at: 30-07-2021 12:00 +07:00
+#           id: 1
+#           email: fnurhidayat@binar.co.id
+#         created_at: 30-07-2021 12:00 +07:00
+#         id: 1
+#         title: Industrial Society and Its Future
+#         body: <p>Industrial society and its future</p>
+#         published_at: 30-07-2021 12:00 +07:00
+#         status: DRAFT
+#     UserEntity:
+#       type: object
+#       properties:
+#         id:
+#           type: number
+#           example: 1
+#         name:
+#           type: string
+#           example: Fikri Rahmat Nurhidayat
+#         email:
+#           type: string
+#           example: fnurhidayat@binar.co.id
+#         created_at:
+#           type: string
+#           example: 30-07-2021 12:00 +07:00
+#         updated_at:
+#           type: string
+#           example: 30-07-2021 12:00 +07:00
+#       example:
+#         updated_at: 30-07-2021 12:00 +07:00
+#         name: Fikri Rahmat Nurhidayat
+#         created_at: 30-07-2021 12:00 +07:00
+#         id: 1
+#         email: fnurhidayat@binar.co.id
+#     TokenEntity:
+#       type: object
+#       properties:
+#         accessToken:
+#           type: string
+#           example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c
+#         refreshToken:
+#           type: string
+#           example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c
+#         expiresAt:
+#           type: number
+#           description: Time since epoch
+#           example: 121323600
+#       example:
+#         accessToken: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c
+#         expiresAt: 121323600
+#         refreshToken: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c
+#     inline_response_200:
+#       type: object
+#       properties:
+#         status:
+#           type: string
+#           example: OK
+#         data:
+#           type: string
+#           nullable: true
+#       example:
+#         data: data
+#         status: OK
+#     inline_response_201:
+#       type: object
+#       properties:
+#         status:
+#           type: string
+#           example: OK
+#         data:
+#           $ref: '#/components/schemas/TokenEntity'
+#       example:
+#         data:
+#           accessToken: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c
+#           expiresAt: 121323600
+#           refreshToken: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c
+#         status: OK
+#     inline_response_401:
+#       type: object
+#       properties:
+#         status:
+#           type: string
+#           example: OK
+#         data:
+#           $ref: '#/components/schemas/inline_response_401_data'
+#     inline_response_422:
+#       type: object
+#       properties:
+#         status:
+#           type: string
+#           example: OK
+#         data:
+#           $ref: '#/components/schemas/inline_response_422_data'
+#     inline_response_200_1:
+#       type: object
+#       properties:
+#         status:
+#           type: string
+#           example: OK
+#         data:
+#           type: array
+#           items:
+#             $ref: '#/components/schemas/PostEntity'
+#       example:
+#         data:
+#         - updated_at: 30-07-2021 12:00 +07:00
+#           author:
+#             updated_at: 30-07-2021 12:00 +07:00
+#             name: Fikri Rahmat Nurhidayat
+#             created_at: 30-07-2021 12:00 +07:00
+#             id: 1
+#             email: fnurhidayat@binar.co.id
+#           created_at: 30-07-2021 12:00 +07:00
+#           id: 1
+#           title: Industrial Society and Its Future
+#           body: <p>Industrial society and its future</p>
+#           published_at: 30-07-2021 12:00 +07:00
+#           status: DRAFT
+#         - updated_at: 30-07-2021 12:00 +07:00
+#           author:
+#             updated_at: 30-07-2021 12:00 +07:00
+#             name: Fikri Rahmat Nurhidayat
+#             created_at: 30-07-2021 12:00 +07:00
+#             id: 1
+#             email: fnurhidayat@binar.co.id
+#           created_at: 30-07-2021 12:00 +07:00
+#           id: 1
+#           title: Industrial Society and Its Future
+#           body: <p>Industrial society and its future</p>
+#           published_at: 30-07-2021 12:00 +07:00
+#           status: DRAFT
+#         status: OK
+#     inline_response_403:
+#       type: object
+#       properties:
+#         status:
+#           type: string
+#           example: FAIL
+#         data:
+#           $ref: '#/components/schemas/inline_response_403_data'
+#     inline_response_201_1:
+#       type: object
+#       properties:
+#         status:
+#           type: string
+#           example: OK
+#         data:
+#           $ref: '#/components/schemas/PostEntity'
+#       example:
+#         data:
+#           updated_at: 30-07-2021 12:00 +07:00
+#           author:
+#             updated_at: 30-07-2021 12:00 +07:00
+#             name: Fikri Rahmat Nurhidayat
+#             created_at: 30-07-2021 12:00 +07:00
+#             id: 1
+#             email: fnurhidayat@binar.co.id
+#           created_at: 30-07-2021 12:00 +07:00
+#           id: 1
+#           title: Industrial Society and Its Future
+#           body: <p>Industrial society and its future</p>
+#           published_at: 30-07-2021 12:00 +07:00
+#           status: DRAFT
+#         status: OK
+#     inline_response_401_data:
+#       type: object
+#       properties:
+#         name:
+#           type: string
+#           example: UNAUTHORIZED
+#         message:
+#           type: string
+#           enum:
+#           - Wrong password!
+#           - Email does not exist!
+#     inline_response_422_data:
+#       type: object
+#       properties:
+#         name:
+#           type: string
+#           example: FAILED_TO_REGISTER
+#         message:
+#           type: string
+#           example: Email already exists!
+#     inline_response_403_data:
+#       type: object
+#       properties:
+#         name:
+#           type: string
+#           example: FORBIDDEN
+#         message:
+#           type: string
+#           example: "You're not allowed to retrieve, or modify this resource!"
+#   responses:
+#     OKResponse:
+#       description: Root response body schema
+#       content:
+#         application/json:
+#           schema:
+#             $ref: '#/components/schemas/inline_response_200'
+#     CredentialErrorResponse:
+#       description: Bad credential response body schema
+#       content:
+#         application/json:
+#           schema:
+#             $ref: '#/components/schemas/inline_response_401'
+#     EmailAlreadyExistErrorResponse:
+#       description: Failed to register response body schema
+#       content:
+#         application/json:
+#           schema:
+#             $ref: '#/components/schemas/inline_response_422'
+#     TokenOKResponse:
+#       description: Login and register body schema
+#       content:
+#         application/json:
+#           schema:
+#             $ref: '#/components/schemas/inline_response_201'
+#     PostOKResponse:
+#       description: "Create, update, and get post body schema"
+#       content:
+#         application/json:
+#           schema:
+#             $ref: '#/components/schemas/inline_response_201_1'
+#     PostForbiddenErrorResponse:
+#       description: "When you try to access, modify, or delete someone else's resources"
+#       content:
+#         application/json:
+#           schema:
+#             $ref: '#/components/schemas/inline_response_403'
+#     PostsOKResponse:
+#       description: Get posts body schema
+#       content:
+#         application/json:
+#           schema:
+#             $ref: '#/components/schemas/inline_response_200_1'
+#   requestBodies:
+#     CredentialRequest:
+#       content:
+#         application/json:
+#           schema:
+#             required:
+#             - email
+#             - password
+#             type: object
+#             properties:
+#               email:
+#                 type: string
+#                 example: fnurhidayat@binar.co.id
+#               password:
+#                 type: string
+#                 example: "123456"
+#       required: true
+#     CreatePostRequest:
+#       content:
+#         application/json:
+#           schema:
+#             required:
+#             - body
+#             - title
+#             type: object
+#             properties:
+#               title:
+#                 type: string
+#                 example: Industrial Society and Its Future
+#               body:
+#                 type: string
+#                 example: <p>Something that is very long</p>
+#       required: true
+#     UpdatePostRequest:
+#       content:
+#         application/json:
+#           schema:
+#             type: object
+#             properties:
+#               title:
+#                 type: string
+#                 example: Industrial Society and Its Future
+#               body:
+#                 type: string
+#                 example: <p>Something that is very long</p>
+#       required: true
+#     PublishPostRequest:
+#       content:
+#         application/json:
+#           schema:
+#             type: object
+#             properties:
+#               status:
+#                 type: string
+#                 enum:
+#                 - DRAFT
+#                 - PUBLISHED
+#       required: true
+#     RegistrationRequest:
+#       content:
+#         application/json:
+#           schema:
+#             required:
+#             - email
+#             - name
+#             - password
+#             type: object
+#             properties:
+#               name:
+#                 type: string
+#                 example: Fikri Rahmat Nurhidayat
+#               email:
+#                 type: string
+#                 example: fnurhidayat@binar.co.id
+#               password:
+#                 type: string
+#                 example: "123456"
+#       required: true
+#   securitySchemes:
+#     BearerToken:
+#       type: http
+#       description: Retrieve it via Authentication tagged endpoint.
+#       scheme: bearer
+#       bearerFormat: JWT
