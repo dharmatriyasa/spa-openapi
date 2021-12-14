@@ -1,5 +1,5 @@
 {
-  "name": "blog-api",
+  "name": "challenges-ch08",
   "version": "2.0.0",
   "description": "This API is being used to manage the blog of **Insert Company Here**. By using this API, you can create an entry for blog, edit you blog post, find you blogpost, or even delete it. To start using this API, you must create an account for **Insert Company Here**. ",
   "main": "index.js",

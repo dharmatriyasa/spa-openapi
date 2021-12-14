@@ -1,10 +1,10 @@
 'use strict';
 
 var utils = require('../utils/writer.js');
-var Post = require('../service/PostService');
+var Round = require('../service/RoundService');
 
-module.exports.createPost = function createPost (req, res, next, body) {
-  Post.createPost(body)
+module.exports.getRoomEnemyInput = function getRoomEnemyInput (req, res, next, body, roundId) {
+  Round.getRoomEnemyInput(body, roundId)
     .then(function (response) {
       utils.writeJson(res, response);
     })
@@ -13,8 +13,8 @@ module.exports.createPost = function createPost (req, res, next, body) {
     });
 };
 
-module.exports.deletePost = function deletePost (req, res, next) {
-  Post.deletePost()
+module.exports.getRoomMasterInput = function getRoomMasterInput (req, res, next, body, roundId) {
+  Round.getRoomMasterInput(body, roundId)
     .then(function (response) {
       utils.writeJson(res, response);
     })
@@ -23,8 +23,8 @@ module.exports.deletePost = function deletePost (req, res, next) {
     });
 };
 
-module.exports.getPost = function getPost (req, res, next) {
-  Post.getPost()
+module.exports.getRounds = function getRounds (req, res, next) {
+  Round.getRounds()
     .then(function (response) {
       utils.writeJson(res, response);
     })
@@ -33,8 +33,8 @@ module.exports.getPost = function getPost (req, res, next) {
     });
 };
 
-module.exports.getPosts = function getPosts (req, res, next, author_id, status) {
-  Post.getPosts(author_id, status)
+module.exports.getUserRoundHistory = function getUserRoundHistory (req, res, next, userId) {
+  Round.getUserRoundHistory(userId)
     .then(function (response) {
       utils.writeJson(res, response);
     })
@@ -43,18 +43,8 @@ module.exports.getPosts = function getPosts (req, res, next, author_id, status) 
     });
 };
 
-module.exports.publishPost = function publishPost (req, res, next, body) {
-  Post.publishPost(body)
-    .then(function (response) {
-      utils.writeJson(res, response);
-    })
-    .catch(function (response) {
-      utils.writeJson(res, response);
-    });
-};
-
-module.exports.updatePost = function updatePost (req, res, next, body) {
-  Post.updatePost(body)
+module.exports.getUserRoundsCooming = function getUserRoundsCooming (req, res, next, userId) {
+  Round.getUserRoundsCooming(userId)
     .then(function (response) {
       utils.writeJson(res, response);
     })

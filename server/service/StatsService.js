@@ -2,16 +2,22 @@
 
 
 /**
- * Root
- * # Root  Use this endpoint to check the health or ping this API. It will return basic JSON object. 
+ * Get spesific user biodata
+ * This endpoint will return user biodata
  *
- * returns inline_response_200
+ * userId BigDecimal The id of the User
+ * returns inline_response_200_5
  **/
-exports.getRoot = function() {
+exports.getUserStats = function(userId) {
   return new Promise(function(resolve, reject) {
     var examples = {};
     examples['application/json'] = {
-  "data" : "data",
+  "data" : {
+    "levelId" : 2,
+    "id" : 1,
+    "userId" : 1,
+    "point" : 300
+  },
   "status" : "OK"
 };
     if (Object.keys(examples).length > 0) {

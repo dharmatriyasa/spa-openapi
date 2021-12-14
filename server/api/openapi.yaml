@@ -9,732 +9,1395 @@ info:
 servers:
 - url: /
   description: Mock Server
-security:
-- BearerToken: []
 tags:
-  - name: Admin
-    description: "contains admin utilities"
-  - name: User
-    description: "contains user utilities"
-  - name: Game
-    description: "contains all about game"
-  - name: Room
-    description: "contains all about room"
-  - name: Round
-    description: "contains all about round"
-  - name: Biodata
-    description: "contains all about biodata"
-  - name: Stats
-    description: "contains all about stas"
-  - name: Level
-    description: "contains all about level"
+- name: Authentication
+  description: contains all about authentication
+- name: User
+  description: contains user utilities
+- name: Game
+  description: contains all about game
+- name: Room
+  description: contains all about room
+- name: Round
+  description: contains all about round
+- name: Biodata
+  description: contains all about biodata
+- name: Stats
+  description: contains all about stas
 paths:
-  # for Admin
+  /v1/login:
+    post:
+      tags:
+      - Authentication
+      summary: Retrieve token
+      description: "# Retrieve access token\n\nUse this endpoint to retrieve the access\
+        \ token\nwith the correct credential. If you haven't got\nany account yet,\
+        \ please register via Register endpoint.\n"
+      operationId: doLogin
+      requestBody:
+        $ref: '#/components/requestBodies/CredentialRequest'
+      responses:
+        "201":
+          description: Login and register body schema
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_201'
+        "401":
+          description: Bad credential response body schema
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_401'
+      security: []
+      x-swagger-router-controller: Authentication
+  /v1/register:
+    post:
+      tags:
+      - Authentication
+      summary: Create new account
+      description: |
+        # Create new account
+
+        Use this endpoint to create new account for this site.
+        If the email already exist it will return `422`.
+      operationId: doRegister
+      requestBody:
+        $ref: '#/components/requestBodies/RegistrationRequest'
+      responses:
+        "201":
+          description: Login and register body schema
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_201'
+        "422":
+          description: Failed to register response body schema
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_422'
+      security: []
+      x-swagger-router-controller: Authentication
   /v1/users:
     get:
       tags:
       - User
-      summary: Root
+      summary: Get all users data
       description: This endpoint will return all users data
       operationId: getUsers
+      parameters: []
       responses:
         "200":
           description: List of users is retreived
-          content: 
-            application/json: 
-              schema:
-                type: object
-                properties:
-                  status: 
-                    type: string
-                    example: "OK"
-                  data:
-                    type: array
-                    items:
-                      type: object
-                      properties: 
-                        id:
-                          type: number
-                          example: 1
-                        username:
-                          type: string
-                          example: "dharmatriyasa"
-                        roleId:
-                          type: number
-                          example: 1
-                        avatarUrl:
-                          type: string
-                          example: "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b6/Image_created_with_a_mobile_phone.png/1200px-Image_created_with_a_mobile_phone.png"
-                        bio:
-                          type: string
-                          example: "Hy my name is dharma. I'm progammer!"
-                        phoneNumber:
-                          type: string
-                          example: "081234567890"
-                        address:
-                          type: string
-                          example: "Jl. P. Salawati"
-        "401":
-          description: Cannot get lists of users without authorized access
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  status:
-                    type: string
-                    example: "FAIL"
-                  data:
-                    type: object
-                    properties:
-                      name:
-                        type: string
-                        example: "UNAUTHORIZED"
-                      message:
-                        type: string
-                        example: You aren't admin!                  
+                $ref: '#/components/schemas/inline_response_200'
+        "403":
+          description: Cannot get lists of rooms without authorized access
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_403'
+      x-swagger-router-controller: User
   /v1/games:
     get:
       tags:
       - Game
-      summary: Root
+      summary: Get all games data
       description: This endpoint will return all games data
       operationId: getGames
       responses:
         "200":
           description: List of games is retreived
-          content: 
-            application/json: 
-              schema:
-                type: object
-                properties:
-                  status: 
-                    type: string
-                    example: "OK"
-                  data:
-                    type: array
-                    items:
-                      type: object
-                      properties: 
-                        id:
-                          type: number
-                          example: 1
-                        firstTimePlay:
-                          type: string
-                          example: "2021-07-30 17:00:00 +0700"
-                        gameTimeEnd:
-                          type: string
-                          example: "2021-07-30 17:00:00 +0730"
-                        isGameEnd:
-                          type: boolean
-                          example: true
-                        winnerId:
-                          type: number
-                          example: 2
-                        totalRound:
-                          type: number
-                          example: 3
-        "401":
-          description: Cannot get lists of users without authorized access
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  status:
-                    type: string
-                    example: "FAIL"
-                  data:
-                    type: object
-                    properties:
-                      name:
-                        type: string
-                        example: "UNAUTHORIZED"
-                      message:
-                        type: string
-                        example: You aren't admin!
-  # /v1/rooms
-  # /v1/rounds
-
-
-  # /:
-  #   get:
-  #     tags:
-  #     - Misc
-  #     summary: Root
-  #     description: |
-  #       # Root
-
-  #       Use this endpoint to check the health or ping this API.
-  #       It will return basic JSON object.
-  #     operationId: getRoot
-  #     responses:
-  #       "200":
-  #         description: Root response body schema
-  #         content:
-  #           application/json:
-  #             schema:
-  #               $ref: '#/components/schemas/inline_response_200'
-  #     security: []
-  #     x-swagger-router-controller: Misc
-  # /v1/login:
-  #   post:
-  #     tags:
-  #     - Authentication
-  #     summary: Retrieve token
-  #     description: "# Retrieve access token\n\nUse this endpoint to retrieve the access\
-  #       \ token\nwith the correct credential. If you haven't got\nany account yet,\
-  #       \ please register via Register endpoint.\n"
-  #     operationId: doLogin
-  #     requestBody:
-  #       $ref: '#/components/requestBodies/CredentialRequest'
-  #     responses:
-  #       "201":
-  #         description: Login and register body schema
-  #         content:
-  #           application/json:
-  #             schema:
-  #               $ref: '#/components/schemas/inline_response_201'
-  #       "401":
-  #         description: Bad credential response body schema
-  #         content:
-  #           application/json:
-  #             schema:
-  #               $ref: '#/components/schemas/inline_response_401'
-  #     security: []
-  #     x-swagger-router-controller: Authentication
-  # /v1/register:
-  #   post:
-  #     tags:
-  #     - Authentication
-  #     summary: Create new account
-  #     description: |
-  #       # Create new account
-
-  #       Use this endpoint to create new account for this site.
-  #       If the email already exist it will return `422`.
-  #     operationId: doRegister
-  #     requestBody:
-  #       $ref: '#/components/requestBodies/RegistrationRequest'
-  #     responses:
-  #       "201":
-  #         description: Login and register body schema
-  #         content:
-  #           application/json:
-  #             schema:
-  #               $ref: '#/components/schemas/inline_response_201'
-  #       "422":
-  #         description: Failed to register response body schema
-  #         content:
-  #           application/json:
-  #             schema:
-  #               $ref: '#/components/schemas/inline_response_422'
-  #     security: []
-  #     x-swagger-router-controller: Authentication
-  # /v1/posts:
-  #   get:
-  #     tags:
-  #     - Post
-  #     summary: Get Posts
-  #     description: "# Get Posts\n\nUse this endpoint to retrieve all posts\nthat are\
-  #       \ available on the database. No pagination required.\n\nWhen you send `status`\
-  #       \ in the query parameter and the value\nis `DRAFT`, it will only send you\
-  #       \ an error when the `author_id`\nis not you.\n"
-  #     operationId: getPosts
-  #     parameters:
-  #     - name: author_id
-  #       in: query
-  #       required: false
-  #       style: form
-  #       explode: true
-  #       schema:
-  #         type: integer
-  #     - name: status
-  #       in: query
-  #       required: false
-  #       style: form
-  #       explode: true
-  #       schema:
-  #         type: string
-  #         enum:
-  #         - DRAFT
-  #         - PUBLISHED
-  #     responses:
-  #       "200":
-  #         description: Get posts body schema
-  #         content:
-  #           application/json:
-  #             schema:
-  #               $ref: '#/components/schemas/inline_response_200_1'
-  #       "403":
-  #         description: "When you try to access, modify, or delete someone else's resources"
-  #         content:
-  #           application/json:
-  #             schema:
-  #               $ref: '#/components/schemas/inline_response_403'
-  #     security: []
-  #     x-swagger-router-controller: Post
-  #   post:
-  #     tags:
-  #     - Post
-  #     summary: Create Post
-  #     description: "# Create Post\n\nYou can create a post to our website, by hitting\
-  #       \ this endpoint.\nBy default, your post won't be shown to the public yet,\
-  #       \ the status\nof that post will be draft by default.\n\nYou can publish your\
-  #       \ post on another endpoint.\n"
-  #     operationId: createPost
-  #     requestBody:
-  #       $ref: '#/components/requestBodies/CreatePostRequest'
-  #     responses:
-  #       "201":
-  #         description: "Create, update, and get post body schema"
-  #         content:
-  #           application/json:
-  #             schema:
-  #               $ref: '#/components/schemas/inline_response_201_1'
-  #     x-swagger-router-controller: Post
-  # /v1/posts/:id:
-  #   get:
-  #     tags:
-  #     - Post
-  #     summary: Get Post
-  #     description: "# Get Post\n\nYou can get a specific post by giving this endpoint\n\
-  #       the ID of the post in the path.\n\nWhen the post is not found, it will return\
-  #       \ `404`.\n"
-  #     operationId: getPost
-  #     responses:
-  #       "200":
-  #         description: "Create, update, and get post body schema"
-  #         content:
-  #           application/json:
-  #             schema:
-  #               $ref: '#/components/schemas/inline_response_201_1'
-  #     security: []
-  #     x-swagger-router-controller: Post
-  #   put:
-  #     tags:
-  #     - Post
-  #     summary: Update Post
-  #     description: |
-  #       # Update Post
-
-  #       You can update your post if you feel like
-  #       there's something need to be updated.
-  #     operationId: updatePost
-  #     requestBody:
-  #       $ref: '#/components/requestBodies/UpdatePostRequest'
-  #     responses:
-  #       "200":
-  #         description: "Create, update, and get post body schema"
-  #         content:
-  #           application/json:
-  #             schema:
-  #               $ref: '#/components/schemas/inline_response_201_1'
-  #       "403":
-  #         description: "When you try to access, modify, or delete someone else's resources"
-  #         content:
-  #           application/json:
-  #             schema:
-  #               $ref: '#/components/schemas/inline_response_403'
-  #     x-swagger-router-controller: Post
-  #   delete:
-  #     tags:
-  #     - Post
-  #     summary: Delete Post
-  #     description: "# Delete Post\n\nYou can remove your post, but why?\n"
-  #     operationId: deletePost
-  #     responses:
-  #       "204":
-  #         description: Root response body schema
-  #         content:
-  #           application/json:
-  #             schema:
-  #               $ref: '#/components/schemas/inline_response_200'
-  #       "403":
-  #         description: "When you try to access, modify, or delete someone else's resources"
-  #         content:
-  #           application/json:
-  #             schema:
-  #               $ref: '#/components/schemas/inline_response_403'
-  #     x-swagger-router-controller: Post
-  # /v1/posts/:id/publishment:
-  #   put:
-  #     tags:
-  #     - Post
-  #     summary: Publish Post
-  #     description: |
-  #       # Publish Post
-
-  #       Now you can decide to show the post to the public or not
-  #       by setting the publishment state.
-  #     operationId: publishPost
-  #     requestBody:
-  #       $ref: '#/components/requestBodies/PublishPostRequest'
-  #     responses:
-  #       "200":
-  #         description: "Create, update, and get post body schema"
-  #         content:
-  #           application/json:
-  #             schema:
-  #               $ref: '#/components/schemas/inline_response_201_1'
-  #       "403":
-  #         description: "When you try to access, modify, or delete someone else's resources"
-  #         content:
-  #           application/json:
-  #             schema:
-  #               $ref: '#/components/schemas/inline_response_403'
-  #     x-swagger-router-controller: Post
-# components:
-#   schemas:
-#     PostEntity:
-#       type: object
-#       properties:
-#         id:
-#           type: number
-#           example: 1
-#         title:
-#           type: string
-#           example: Industrial Society and Its Future
-#         body:
-#           type: string
-#           example: <p>Industrial society and its future</p>
-#         status:
-#           type: string
-#           enum:
-#           - DRAFT
-#           - PUBLISHED
-#         author:
-#           $ref: '#/components/schemas/UserEntity'
-#         created_at:
-#           type: string
-#           example: 30-07-2021 12:00 +07:00
-#         published_at:
-#           type: string
-#           example: 30-07-2021 12:00 +07:00
-#         updated_at:
-#           type: string
-#           example: 30-07-2021 12:00 +07:00
-#       example:
-#         updated_at: 30-07-2021 12:00 +07:00
-#         author:
-#           updated_at: 30-07-2021 12:00 +07:00
-#           name: Fikri Rahmat Nurhidayat
-#           created_at: 30-07-2021 12:00 +07:00
-#           id: 1
-#           email: fnurhidayat@binar.co.id
-#         created_at: 30-07-2021 12:00 +07:00
-#         id: 1
-#         title: Industrial Society and Its Future
-#         body: <p>Industrial society and its future</p>
-#         published_at: 30-07-2021 12:00 +07:00
-#         status: DRAFT
-#     UserEntity:
-#       type: object
-#       properties:
-#         id:
-#           type: number
-#           example: 1
-#         name:
-#           type: string
-#           example: Fikri Rahmat Nurhidayat
-#         email:
-#           type: string
-#           example: fnurhidayat@binar.co.id
-#         created_at:
-#           type: string
-#           example: 30-07-2021 12:00 +07:00
-#         updated_at:
-#           type: string
-#           example: 30-07-2021 12:00 +07:00
-#       example:
-#         updated_at: 30-07-2021 12:00 +07:00
-#         name: Fikri Rahmat Nurhidayat
-#         created_at: 30-07-2021 12:00 +07:00
-#         id: 1
-#         email: fnurhidayat@binar.co.id
-#     TokenEntity:
-#       type: object
-#       properties:
-#         accessToken:
-#           type: string
-#           example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c
-#         refreshToken:
-#           type: string
-#           example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c
-#         expiresAt:
-#           type: number
-#           description: Time since epoch
-#           example: 121323600
-#       example:
-#         accessToken: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c
-#         expiresAt: 121323600
-#         refreshToken: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c
-#     inline_response_200:
-#       type: object
-#       properties:
-#         status:
-#           type: string
-#           example: OK
-#         data:
-#           type: string
-#           nullable: true
-#       example:
-#         data: data
-#         status: OK
-#     inline_response_201:
-#       type: object
-#       properties:
-#         status:
-#           type: string
-#           example: OK
-#         data:
-#           $ref: '#/components/schemas/TokenEntity'
-#       example:
-#         data:
-#           accessToken: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c
-#           expiresAt: 121323600
-#           refreshToken: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c
-#         status: OK
-#     inline_response_401:
-#       type: object
-#       properties:
-#         status:
-#           type: string
-#           example: OK
-#         data:
-#           $ref: '#/components/schemas/inline_response_401_data'
-#     inline_response_422:
-#       type: object
-#       properties:
-#         status:
-#           type: string
-#           example: OK
-#         data:
-#           $ref: '#/components/schemas/inline_response_422_data'
-#     inline_response_200_1:
-#       type: object
-#       properties:
-#         status:
-#           type: string
-#           example: OK
-#         data:
-#           type: array
-#           items:
-#             $ref: '#/components/schemas/PostEntity'
-#       example:
-#         data:
-#         - updated_at: 30-07-2021 12:00 +07:00
-#           author:
-#             updated_at: 30-07-2021 12:00 +07:00
-#             name: Fikri Rahmat Nurhidayat
-#             created_at: 30-07-2021 12:00 +07:00
-#             id: 1
-#             email: fnurhidayat@binar.co.id
-#           created_at: 30-07-2021 12:00 +07:00
-#           id: 1
-#           title: Industrial Society and Its Future
-#           body: <p>Industrial society and its future</p>
-#           published_at: 30-07-2021 12:00 +07:00
-#           status: DRAFT
-#         - updated_at: 30-07-2021 12:00 +07:00
-#           author:
-#             updated_at: 30-07-2021 12:00 +07:00
-#             name: Fikri Rahmat Nurhidayat
-#             created_at: 30-07-2021 12:00 +07:00
-#             id: 1
-#             email: fnurhidayat@binar.co.id
-#           created_at: 30-07-2021 12:00 +07:00
-#           id: 1
-#           title: Industrial Society and Its Future
-#           body: <p>Industrial society and its future</p>
-#           published_at: 30-07-2021 12:00 +07:00
-#           status: DRAFT
-#         status: OK
-#     inline_response_403:
-#       type: object
-#       properties:
-#         status:
-#           type: string
-#           example: FAIL
-#         data:
-#           $ref: '#/components/schemas/inline_response_403_data'
-#     inline_response_201_1:
-#       type: object
-#       properties:
-#         status:
-#           type: string
-#           example: OK
-#         data:
-#           $ref: '#/components/schemas/PostEntity'
-#       example:
-#         data:
-#           updated_at: 30-07-2021 12:00 +07:00
-#           author:
-#             updated_at: 30-07-2021 12:00 +07:00
-#             name: Fikri Rahmat Nurhidayat
-#             created_at: 30-07-2021 12:00 +07:00
-#             id: 1
-#             email: fnurhidayat@binar.co.id
-#           created_at: 30-07-2021 12:00 +07:00
-#           id: 1
-#           title: Industrial Society and Its Future
-#           body: <p>Industrial society and its future</p>
-#           published_at: 30-07-2021 12:00 +07:00
-#           status: DRAFT
-#         status: OK
-#     inline_response_401_data:
-#       type: object
-#       properties:
-#         name:
-#           type: string
-#           example: UNAUTHORIZED
-#         message:
-#           type: string
-#           enum:
-#           - Wrong password!
-#           - Email does not exist!
-#     inline_response_422_data:
-#       type: object
-#       properties:
-#         name:
-#           type: string
-#           example: FAILED_TO_REGISTER
-#         message:
-#           type: string
-#           example: Email already exists!
-#     inline_response_403_data:
-#       type: object
-#       properties:
-#         name:
-#           type: string
-#           example: FORBIDDEN
-#         message:
-#           type: string
-#           example: "You're not allowed to retrieve, or modify this resource!"
-#   responses:
-#     OKResponse:
-#       description: Root response body schema
-#       content:
-#         application/json:
-#           schema:
-#             $ref: '#/components/schemas/inline_response_200'
-#     CredentialErrorResponse:
-#       description: Bad credential response body schema
-#       content:
-#         application/json:
-#           schema:
-#             $ref: '#/components/schemas/inline_response_401'
-#     EmailAlreadyExistErrorResponse:
-#       description: Failed to register response body schema
-#       content:
-#         application/json:
-#           schema:
-#             $ref: '#/components/schemas/inline_response_422'
-#     TokenOKResponse:
-#       description: Login and register body schema
-#       content:
-#         application/json:
-#           schema:
-#             $ref: '#/components/schemas/inline_response_201'
-#     PostOKResponse:
-#       description: "Create, update, and get post body schema"
-#       content:
-#         application/json:
-#           schema:
-#             $ref: '#/components/schemas/inline_response_201_1'
-#     PostForbiddenErrorResponse:
-#       description: "When you try to access, modify, or delete someone else's resources"
-#       content:
-#         application/json:
-#           schema:
-#             $ref: '#/components/schemas/inline_response_403'
-#     PostsOKResponse:
-#       description: Get posts body schema
-#       content:
-#         application/json:
-#           schema:
-#             $ref: '#/components/schemas/inline_response_200_1'
-#   requestBodies:
-#     CredentialRequest:
-#       content:
-#         application/json:
-#           schema:
-#             required:
-#             - email
-#             - password
-#             type: object
-#             properties:
-#               email:
-#                 type: string
-#                 example: fnurhidayat@binar.co.id
-#               password:
-#                 type: string
-#                 example: "123456"
-#       required: true
-#     CreatePostRequest:
-#       content:
-#         application/json:
-#           schema:
-#             required:
-#             - body
-#             - title
-#             type: object
-#             properties:
-#               title:
-#                 type: string
-#                 example: Industrial Society and Its Future
-#               body:
-#                 type: string
-#                 example: <p>Something that is very long</p>
-#       required: true
-#     UpdatePostRequest:
-#       content:
-#         application/json:
-#           schema:
-#             type: object
-#             properties:
-#               title:
-#                 type: string
-#                 example: Industrial Society and Its Future
-#               body:
-#                 type: string
-#                 example: <p>Something that is very long</p>
-#       required: true
-#     PublishPostRequest:
-#       content:
-#         application/json:
-#           schema:
-#             type: object
-#             properties:
-#               status:
-#                 type: string
-#                 enum:
-#                 - DRAFT
-#                 - PUBLISHED
-#       required: true
-#     RegistrationRequest:
-#       content:
-#         application/json:
-#           schema:
-#             required:
-#             - email
-#             - name
-#             - password
-#             type: object
-#             properties:
-#               name:
-#                 type: string
-#                 example: Fikri Rahmat Nurhidayat
-#               email:
-#                 type: string
-#                 example: fnurhidayat@binar.co.id
-#               password:
-#                 type: string
-#                 example: "123456"
-#       required: true
-#   securitySchemes:
-#     BearerToken:
-#       type: http
-#       description: Retrieve it via Authentication tagged endpoint.
-#       scheme: bearer
-#       bearerFormat: JWT
+                $ref: '#/components/schemas/inline_response_200_1'
+        "403":
+          description: Cannot get lists of rooms without authorized access
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_403'
+      x-swagger-router-controller: Game
+  /v1/rooms:
+    get:
+      tags:
+      - Room
+      summary: Get all rooms data
+      description: This endpoint will return all rooms data
+      operationId: getRooms
+      responses:
+        "200":
+          description: List of rooms is retreived
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_200_2'
+        "403":
+          description: Cannot get lists of rooms without authorized access
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_403'
+      x-swagger-router-controller: Room
+  /v1/rounds:
+    get:
+      tags:
+      - Round
+      summary: Get all rounds data
+      description: This endpoint will return all rounds data
+      operationId: getRounds
+      responses:
+        "200":
+          description: List of rounds is retreived
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_200_3'
+        "403":
+          description: Cannot get lists of rooms without authorized access
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_403'
+      x-swagger-router-controller: Round
+  /v1/user/{userId}/biodata:
+    get:
+      tags:
+      - Biodata
+      summary: Get spesific user biodata
+      description: This endpoint will return user biodata
+      operationId: getUserById
+      parameters:
+      - name: userId
+        in: path
+        description: The id of the User
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: number
+          example: 1
+      responses:
+        "200":
+          description: "Create, update, and get biodata body schema"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_200_4'
+        "401":
+          description: Bad credential response body schema
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_401'
+        "403":
+          description: Cannot get this users
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_403_1'
+      x-swagger-router-controller: Biodata
+    post:
+      tags:
+      - Biodata
+      summary: Post spesific user biodata
+      description: This endpoint will post user data
+      operationId: postUserById
+      parameters:
+      - name: userId
+        in: path
+        description: The id of the User
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: number
+          example: 1
+      requestBody:
+        $ref: '#/components/requestBodies/CreateBiodataRequest'
+      responses:
+        "200":
+          description: "Create, update, and get biodata body schema"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_200_4'
+        "401":
+          description: Bad credential response body schema
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_401'
+        "403":
+          description: Cannot get this users
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_403_1'
+      x-swagger-router-controller: Biodata
+  /v1/user/{userId}/update-biodata:
+    put:
+      tags:
+      - Biodata
+      summary: Update spesific user biodata
+      description: This endpoint will update user biodata
+      operationId: updatetUserById
+      parameters:
+      - name: userId
+        in: path
+        description: The id of the User
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: number
+          example: 1
+      requestBody:
+        $ref: '#/components/requestBodies/UpdateBiodataRequest'
+      responses:
+        "200":
+          description: "Create, update, and get biodata body schema"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_200_4'
+        "401":
+          description: Bad credential response body schema
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_401'
+        "403":
+          description: Cannot get this users
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_403_1'
+      x-swagger-router-controller: Biodata
+  /v1/user/{userId}/stats:
+    get:
+      tags:
+      - Stats
+      summary: Get spesific user biodata
+      description: This endpoint will return user biodata
+      operationId: getUserStats
+      parameters:
+      - name: userId
+        in: path
+        description: The id of the User
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: number
+          example: 1
+      responses:
+        "200":
+          description: Get stats body schema
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_200_5'
+        "401":
+          description: Bad credential response body schema
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_401'
+        "403":
+          description: Cannot get this users
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_403_1'
+      x-swagger-router-controller: Stats
+  /v1/user/{userId}/games/history:
+    get:
+      tags:
+      - Game
+      summary: Get history games
+      description: This endpoint will return user history games
+      operationId: getUserGameHistory
+      parameters:
+      - name: userId
+        in: path
+        description: The id of the User
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: number
+          example: 1
+      responses:
+        "200":
+          description: Get games body schema
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_200_6'
+        "401":
+          description: Bad credential response body schema
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_401'
+        "403":
+          description: Cannot get this users
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_403_1'
+      x-swagger-router-controller: Game
+  /v1/user/{userId}/games/cooming:
+    get:
+      tags:
+      - Game
+      summary: Get user games cooming soon
+      description: This endpoint will user games cooming soon
+      operationId: getUserGamesCooming
+      parameters:
+      - name: userId
+        in: path
+        description: The id of the User
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: number
+          example: 1
+      responses:
+        "200":
+          description: Get games body schema
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_200_6'
+        "401":
+          description: Bad credential response body schema
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_401'
+        "403":
+          description: Cannot get this users
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_403_1'
+      x-swagger-router-controller: Game
+  /v1/user/{userId}/rounds/history:
+    get:
+      tags:
+      - Round
+      summary: Get history rounds
+      description: This endpoint will return user history rounds
+      operationId: getUserRoundHistory
+      parameters:
+      - name: userId
+        in: path
+        description: The id of the User
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: number
+          example: 1
+      responses:
+        "200":
+          description: Get rounds body schema
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_200_7'
+        "401":
+          description: Bad credential response body schema
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_401'
+        "403":
+          description: Cannot get this users
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_403_1'
+      x-swagger-router-controller: Round
+  /v1/user/{userId}/rounds/cooming:
+    get:
+      tags:
+      - Round
+      summary: Get user rounds cooming soon
+      description: This endpoint will user rounds cooming soon
+      operationId: getUserRoundsCooming
+      parameters:
+      - name: userId
+        in: path
+        description: The id of the User
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: number
+          example: 1
+      responses:
+        "200":
+          description: Get rounds body schema
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_200_7'
+        "401":
+          description: Bad credential response body schema
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_401'
+        "403":
+          description: Cannot get this users
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_403_1'
+      x-swagger-router-controller: Round
+  /v1/games/{roundId}/roomMaster/input:
+    post:
+      tags:
+      - Round
+      summary: user P R S input
+      description: This endpoint receive user input
+      operationId: getRoomMasterInput
+      parameters:
+      - name: roundId
+        in: path
+        description: The id of the Round
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: number
+          example: 1
+      requestBody:
+        $ref: '#/components/requestBodies/UserInputRequest'
+      responses:
+        "200":
+          description: Post user input
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_200_8'
+        "400":
+          description: Invalid input response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_400'
+      x-swagger-router-controller: Round
+  /v1/games/{roundId}/roomEnemy/input:
+    post:
+      tags:
+      - Round
+      summary: user P R S input
+      description: This endpoint receive enemy input
+      operationId: getRoomEnemyInput
+      parameters:
+      - name: roundId
+        in: path
+        description: The id of the Round
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: number
+          example: 1
+      requestBody:
+        $ref: '#/components/requestBodies/UserInputRequest'
+      responses:
+        "200":
+          description: Post user input
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_200_8'
+        "400":
+          description: Invalid input response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_400'
+      x-swagger-router-controller: Round
+  /v1/games/create-room:
+    post:
+      tags:
+      - Room
+      summary: user create room
+      description: This endpoint will create room and challenges other player
+      operationId: postCreateRoom
+      requestBody:
+        $ref: '#/components/requestBodies/UserCreateRoomRequest'
+      responses:
+        "200":
+          description: Post create room
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_200_9'
+        "400":
+          description: Invalid input response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_400_1'
+      x-swagger-router-controller: Room
+  /v1/games/accept-room:
+    post:
+      tags:
+      - Room
+      summary: user create room
+      description: This endpoint will create room and challenges other player
+      operationId: postAcceptRoom
+      requestBody:
+        $ref: '#/components/requestBodies/UserAcceptRoomRequest'
+      responses:
+        "200":
+          description: Post accept room
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_200_10'
+        "400":
+          description: Invalid input response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_400_2'
+      x-swagger-router-controller: Room
+components:
+  schemas:
+    BiodataEntity:
+      type: object
+      properties:
+        id:
+          type: number
+          example: 1
+        userId:
+          type: number
+          example: 1
+        avatarUrl:
+          type: string
+          example: https://youtube.com
+        bio:
+          type: string
+          example: Lorem ipsum haah hehe haha
+        phoneNumber:
+          type: string
+          example: "08123451234"
+        address:
+          type: string
+          example: Jl. P Haha Hehe No 12
+      example:
+        phoneNumber: "08123451234"
+        address: Jl. P Haha Hehe No 12
+        avatarUrl: https://youtube.com
+        bio: Lorem ipsum haah hehe haha
+        id: 1
+        userId: 1
+    StatsEntity:
+      type: object
+      properties:
+        id:
+          type: number
+          example: 1
+        userId:
+          type: number
+          example: 1
+        levelId:
+          type: number
+          example: 2
+        point:
+          type: number
+          example: 300
+      example:
+        levelId: 2
+        id: 1
+        userId: 1
+        point: 300
+    GamesEntity:
+      type: array
+      items:
+        $ref: '#/components/schemas/GamesEntity_inner'
+    RoundEntity:
+      type: array
+      items:
+        $ref: '#/components/schemas/RoundEntity_inner'
+    TokenEntity:
+      type: object
+      properties:
+        accessToken:
+          type: string
+          example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c
+        refreshToken:
+          type: string
+          example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c
+        expiresAt:
+          type: number
+          description: Time since epoch
+          example: 16176257
+      example:
+        accessToken: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c
+        expiresAt: 16176257
+        refreshToken: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c
+    inline_response_201:
+      type: object
+      properties:
+        status:
+          type: string
+          example: OK
+        data:
+          $ref: '#/components/schemas/TokenEntity'
+      example:
+        data:
+          accessToken: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c
+          expiresAt: 16176257
+          refreshToken: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c
+        status: OK
+    inline_response_401:
+      type: object
+      properties:
+        status:
+          type: string
+          example: OK
+        data:
+          $ref: '#/components/schemas/inline_response_401_data'
+    inline_response_422:
+      type: object
+      properties:
+        status:
+          type: string
+          example: OK
+        data:
+          $ref: '#/components/schemas/inline_response_422_data'
+    inline_response_200:
+      type: object
+      properties:
+        status:
+          type: string
+          example: OK
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/inline_response_200_data'
+      example:
+        data:
+        - phoneNumber: "081234567890"
+          address: Jl. P. Salawati
+          avatarUrl: https://upload.wikimedia.org/wikipedia/commons/thumb/b/b6/Image_created_with_a_mobile_phone.png/1200px-Image_created_with_a_mobile_phone.png
+          roleId: 1
+          bio: Hy my name is dharma. I'm progammer!
+          id: 1
+          username: dharmatriyasa
+        - phoneNumber: "081234567890"
+          address: Jl. P. Salawati
+          avatarUrl: https://upload.wikimedia.org/wikipedia/commons/thumb/b/b6/Image_created_with_a_mobile_phone.png/1200px-Image_created_with_a_mobile_phone.png
+          roleId: 1
+          bio: Hy my name is dharma. I'm progammer!
+          id: 1
+          username: dharmatriyasa
+        status: OK
+    inline_response_403:
+      type: object
+      properties:
+        status:
+          type: string
+          example: FAIL
+        data:
+          $ref: '#/components/schemas/inline_response_403_data'
+    inline_response_200_1:
+      type: object
+      properties:
+        status:
+          type: string
+          example: OK
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/GamesEntity_inner'
+      example:
+        data:
+        - totalRound: 3
+          gameTimeEnd: 2021-07-30 17:00:00 +0730
+          winnerId: 2
+          isGameEnd: true
+          id: 1
+          firstTimePlay: 2021-07-30 17:00:00 +0700
+        - totalRound: 3
+          gameTimeEnd: 2021-07-30 17:00:00 +0730
+          winnerId: 2
+          isGameEnd: true
+          id: 1
+          firstTimePlay: 2021-07-30 17:00:00 +0700
+        status: OK
+    inline_response_200_2:
+      type: object
+      properties:
+        status:
+          type: string
+          example: OK
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/inline_response_200_2_data'
+      example:
+        data:
+        - gameId: 1
+          roomStatus: open
+          id: 1
+          roomName: abcde
+          roomMasterId: 3
+        - gameId: 1
+          roomStatus: open
+          id: 1
+          roomName: abcde
+          roomMasterId: 3
+        status: OK
+    inline_response_200_3:
+      type: object
+      properties:
+        status:
+          type: string
+          example: OK
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/inline_response_200_3_data'
+      example:
+        data:
+        - user1Choose: P
+          createdAt: 2021-07-30 17:00:00 +0700
+          winnerId: 1
+          id: 1
+          endAt: 2021-07-30 17:00:00 +0705
+          user2Choose: R
+          updatedAt: 2021-07-30 17:00:00 +0700
+        - user1Choose: P
+          createdAt: 2021-07-30 17:00:00 +0700
+          winnerId: 1
+          id: 1
+          endAt: 2021-07-30 17:00:00 +0705
+          user2Choose: R
+          updatedAt: 2021-07-30 17:00:00 +0700
+        status: OK
+    inline_response_200_4:
+      type: object
+      properties:
+        status:
+          type: string
+          example: OK
+        data:
+          $ref: '#/components/schemas/BiodataEntity'
+      example:
+        data:
+          phoneNumber: "08123451234"
+          address: Jl. P Haha Hehe No 12
+          avatarUrl: https://youtube.com
+          bio: Lorem ipsum haah hehe haha
+          id: 1
+          userId: 1
+        status: OK
+    inline_response_403_1:
+      type: object
+      properties:
+        status:
+          type: string
+          example: FAIL
+        data:
+          $ref: '#/components/schemas/inline_response_403_1_data'
+    inline_response_200_5:
+      type: object
+      properties:
+        status:
+          type: string
+          example: OK
+        data:
+          $ref: '#/components/schemas/StatsEntity'
+      example:
+        data:
+          levelId: 2
+          id: 1
+          userId: 1
+          point: 300
+        status: OK
+    inline_response_200_6:
+      type: object
+      properties:
+        status:
+          type: string
+          example: OK
+        data:
+          $ref: '#/components/schemas/GamesEntity'
+      example:
+        data:
+        - totalRound: 3
+          gameTimeEnd: 2021-07-30 17:00:00 +0730
+          winnerId: 2
+          isGameEnd: true
+          id: 1
+          firstTimePlay: 2021-07-30 17:00:00 +0700
+        - totalRound: 3
+          gameTimeEnd: 2021-07-30 17:00:00 +0730
+          winnerId: 2
+          isGameEnd: true
+          id: 1
+          firstTimePlay: 2021-07-30 17:00:00 +0700
+        status: OK
+    inline_response_200_7:
+      type: object
+      properties:
+        status:
+          type: string
+          example: OK
+        data:
+          $ref: '#/components/schemas/RoundEntity'
+      example:
+        data:
+        - winnerId: 2
+          id: 1
+          roomId: 3
+          status: open
+        - winnerId: 2
+          id: 1
+          roomId: 3
+          status: open
+        status: OK
+    inline_response_200_8:
+      type: object
+      properties:
+        status:
+          type: string
+          example: OK
+        data:
+          $ref: '#/components/schemas/inline_response_200_8_data'
+      example:
+        data:
+          id: 1
+          userInput: R
+          userId: 1
+        status: OK
+    inline_response_400:
+      type: object
+      properties:
+        status:
+          type: string
+          example: FAIL
+        data:
+          $ref: '#/components/schemas/inline_response_400_data'
+    inline_response_200_9:
+      type: object
+      properties:
+        status:
+          type: string
+          example: OK
+        data:
+          $ref: '#/components/schemas/inline_response_200_9_data'
+      example:
+        data:
+          roomEnemyId: 2
+          id: 1
+          roomMasterId: 1
+          status: waiting
+        status: OK
+    inline_response_400_1:
+      type: object
+      properties:
+        status:
+          type: string
+          example: FAIL
+        data:
+          $ref: '#/components/schemas/inline_response_400_1_data'
+    inline_response_200_10:
+      type: object
+      properties:
+        status:
+          type: string
+          example: OK
+        data:
+          $ref: '#/components/schemas/inline_response_200_10_data'
+      example:
+        data:
+          roomEnemyId: 2
+          id: 1
+          roomMasterId: 1
+          status: accept
+        status: OK
+    inline_response_400_2:
+      type: object
+      properties:
+        status:
+          type: string
+          example: REJECT
+        data:
+          $ref: '#/components/schemas/inline_response_400_2_data'
+    GamesEntity_inner:
+      type: object
+      properties:
+        id:
+          type: number
+          example: 1
+        firstTimePlay:
+          type: string
+          example: 2021-07-30 17:00:00 +0700
+        gameTimeEnd:
+          type: string
+          example: 2021-07-30 17:00:00 +0730
+        isGameEnd:
+          type: boolean
+          example: true
+        winnerId:
+          type: number
+          example: 2
+        totalRound:
+          type: number
+          example: 3
+      example:
+        totalRound: 3
+        gameTimeEnd: 2021-07-30 17:00:00 +0730
+        winnerId: 2
+        isGameEnd: true
+        id: 1
+        firstTimePlay: 2021-07-30 17:00:00 +0700
+    RoundEntity_inner:
+      type: object
+      properties:
+        id:
+          type: number
+          example: 1
+        status:
+          type: string
+          example: open
+        winnerId:
+          type: number
+          example: 2
+        roomId:
+          type: number
+          example: 3
+      example:
+        winnerId: 2
+        id: 1
+        roomId: 3
+        status: open
+    inline_response_401_data:
+      type: object
+      properties:
+        name:
+          type: string
+          example: UNAUTHORIZED
+        message:
+          type: string
+          enum:
+          - Wrong password!
+          - Email does not exist!
+    inline_response_422_data:
+      type: object
+      properties:
+        name:
+          type: string
+          example: FAILED_TO_REGISTER
+        message:
+          type: string
+          example: Email already exists!
+    inline_response_200_data:
+      type: object
+      properties:
+        id:
+          type: number
+          example: 1
+        username:
+          type: string
+          example: dharmatriyasa
+        roleId:
+          type: number
+          example: 1
+        avatarUrl:
+          type: string
+          example: https://upload.wikimedia.org/wikipedia/commons/thumb/b/b6/Image_created_with_a_mobile_phone.png/1200px-Image_created_with_a_mobile_phone.png
+        bio:
+          type: string
+          example: Hy my name is dharma. I'm progammer!
+        phoneNumber:
+          type: string
+          example: "081234567890"
+        address:
+          type: string
+          example: Jl. P. Salawati
+      example:
+        phoneNumber: "081234567890"
+        address: Jl. P. Salawati
+        avatarUrl: https://upload.wikimedia.org/wikipedia/commons/thumb/b/b6/Image_created_with_a_mobile_phone.png/1200px-Image_created_with_a_mobile_phone.png
+        roleId: 1
+        bio: Hy my name is dharma. I'm progammer!
+        id: 1
+        username: dharmatriyasa
+    inline_response_403_data:
+      type: object
+      properties:
+        name:
+          type: string
+          example: UNAUTHORIZED
+        message:
+          type: string
+          example: You aren't admin!
+    inline_response_200_2_data:
+      type: object
+      properties:
+        id:
+          type: number
+          example: 1
+        roomName:
+          type: string
+          example: abcde
+        roomMasterId:
+          type: number
+          example: 3
+        roomStatus:
+          type: string
+          example: open
+        gameId:
+          type: number
+          example: 1
+      example:
+        gameId: 1
+        roomStatus: open
+        id: 1
+        roomName: abcde
+        roomMasterId: 3
+    inline_response_200_3_data:
+      type: object
+      properties:
+        id:
+          type: number
+          example: 1
+        user1Choose:
+          type: string
+          example: P
+        user2Choose:
+          type: string
+          example: R
+        winnerId:
+          type: number
+          example: 1
+        createdAt:
+          type: string
+          example: 2021-07-30 17:00:00 +0700
+        updatedAt:
+          type: string
+          example: 2021-07-30 17:00:00 +0700
+        endAt:
+          type: string
+          example: 2021-07-30 17:00:00 +0705
+      example:
+        user1Choose: P
+        createdAt: 2021-07-30 17:00:00 +0700
+        winnerId: 1
+        id: 1
+        endAt: 2021-07-30 17:00:00 +0705
+        user2Choose: R
+        updatedAt: 2021-07-30 17:00:00 +0700
+    inline_response_403_1_data:
+      type: object
+      properties:
+        name:
+          type: string
+          example: UNAUTHORIZED
+        message:
+          type: string
+          example: You aren't this user!
+    inline_response_200_8_data:
+      type: object
+      properties:
+        id:
+          type: number
+          example: 1
+        userId:
+          type: number
+          example: 1
+        userInput:
+          type: string
+          example: R
+      example:
+        id: 1
+        userInput: R
+        userId: 1
+    inline_response_400_data:
+      type: object
+      properties:
+        name:
+          type: string
+          example: INVALID INPUT
+        message:
+          type: string
+          example: "P, R, or S"
+    inline_response_200_9_data:
+      type: object
+      properties:
+        id:
+          type: number
+          example: 1
+        roomMasterId:
+          type: number
+          example: 1
+        roomEnemyId:
+          type: number
+          example: 2
+        status:
+          type: string
+          example: waiting
+      example:
+        roomEnemyId: 2
+        id: 1
+        roomMasterId: 1
+        status: waiting
+    inline_response_400_1_data:
+      type: object
+      properties:
+        name:
+          type: string
+          example: TRY AGAIN
+        message:
+          type: string
+          example: Enemy reject your challenges
+    inline_response_200_10_data:
+      type: object
+      properties:
+        id:
+          type: number
+          example: 1
+        roomMasterId:
+          type: number
+          example: 1
+        roomEnemyId:
+          type: number
+          example: 2
+        status:
+          type: string
+          example: accept
+      example:
+        roomEnemyId: 2
+        id: 1
+        roomMasterId: 1
+        status: accept
+    inline_response_400_2_data:
+      type: object
+      properties:
+        name:
+          type: string
+          example: REJECT
+        message:
+          type: string
+          example: You're reject the invitation!
+  responses:
+    BiodataOKResponse:
+      description: "Create, update, and get biodata body schema"
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/inline_response_200_4'
+    StatsOKResponse:
+      description: Get stats body schema
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/inline_response_200_5'
+    GamesOKResponse:
+      description: Get games body schema
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/inline_response_200_6'
+    RoundOKResponse:
+      description: Get rounds body schema
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/inline_response_200_7'
+    InputUserOKResponse:
+      description: Post user input
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/inline_response_200_8'
+    CreateRoomOKResponse:
+      description: Post create room
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/inline_response_200_9'
+    AcceptRoomOKResponse:
+      description: Post accept room
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/inline_response_200_10'
+    CreateRoomFailResponse:
+      description: Invalid input response
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/inline_response_400_1'
+    RejectRoomResponse:
+      description: Invalid input response
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/inline_response_400_2'
+    InvalidInputResponse:
+      description: Invalid input response
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/inline_response_400'
+    ForbiddenAdminResponse:
+      description: Cannot get lists of rooms without authorized access
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/inline_response_403'
+    ForbiddenUserResponse:
+      description: Cannot get this users
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/inline_response_403_1'
+    CredentialErrorResponse:
+      description: Bad credential response body schema
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/inline_response_401'
+    EmailAlreadyExistErrorResponse:
+      description: Failed to register response body schema
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/inline_response_422'
+    TokenOKResponse:
+      description: Login and register body schema
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/inline_response_201'
+  requestBodies:
+    CredentialRequest:
+      content:
+        application/json:
+          schema:
+            required:
+            - email
+            - password
+            type: object
+            properties:
+              email:
+                type: string
+                example: dharmatriyasa@gmail.com
+              password:
+                type: string
+                example: qwertyuiop
+      required: true
+    RegistrationRequest:
+      content:
+        application/json:
+          schema:
+            required:
+            - email
+            - name
+            - password
+            type: object
+            properties:
+              name:
+                type: string
+                example: Dharma Triyasa
+              email:
+                type: string
+                example: dharmatriyasa@gmail.com
+              password:
+                type: string
+                example: qwertyuiop
+      required: true
+    CreateBiodataRequest:
+      content:
+        application/json:
+          schema:
+            required:
+            - address
+            - avatarUrl
+            - bio
+            - phoneNumber
+            type: object
+            properties:
+              avatarUrl:
+                type: string
+                example: https://youtube.com
+              bio:
+                type: string
+                example: BLT gak cair cair
+              phoneNumber:
+                type: string
+                example: "08989898989"
+              address:
+                type: string
+                example: Jalan BLT GAK CAIR
+      required: true
+    UpdateBiodataRequest:
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              avatarUrl:
+                type: string
+                example: https://youtube.com
+              bio:
+                type: string
+                example: BLT gak cair cair
+              phoneNumber:
+                type: string
+                example: "08989898989"
+              address:
+                type: string
+                example: Jalan BLT GAK CAIR
+      required: true
+    UserInputRequest:
+      content:
+        application/json:
+          schema:
+            required:
+            - inputChooseUser
+            type: object
+            properties:
+              inputChooseUser:
+                type: string
+                example: R
+    UserCreateRoomRequest:
+      content:
+        application/json:
+          schema:
+            required:
+            - userEnemyId
+            type: object
+            properties:
+              userEnemyId:
+                type: number
+                example: 4
+    UserAcceptRoomRequest:
+      content:
+        application/json:
+          schema:
+            required:
+            - invitationStatus
+            type: object
+            properties:
+              invitationStatus:
+                type: boolean
+                example: true

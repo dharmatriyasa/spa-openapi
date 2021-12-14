@@ -1,10 +1,10 @@
 'use strict';
 
 var utils = require('../utils/writer.js');
-var Misc = require('../service/MiscService');
+var User = require('../service/UserService');
 
-module.exports.getRoot = function getRoot (req, res, next) {
-  Misc.getRoot()
+module.exports.getUsers = function getUsers (req, res, next) {
+  User.getUsers()
     .then(function (response) {
       utils.writeJson(res, response);
     })
